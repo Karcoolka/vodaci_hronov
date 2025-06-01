@@ -62,7 +62,7 @@
                 <i class="bi bi-clock-fill text-primary me-2"></i>
                 <div>
                   <h6>Otevřeno</h6>
-                  <p class="mb-0">PRAVIDELNÉ SCHŮZKY MOMENTÁLNĚ PROBÍHAJÍ KAŽDÉ ÚTERÝ 17 - 19 HODIN<br> Nebo dle domluvy a plánovaných akcí</p>
+                  <p class="mb-0">Pravidelné schůzky momentálně probíhají každé úterý 17-19:00<br> Nebo dle domluvy a plánovaných akcí</p>
                 </div>
               </div>
 
