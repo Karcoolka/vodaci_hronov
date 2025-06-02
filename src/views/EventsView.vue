@@ -18,7 +18,7 @@
                 <p class="card-text">{{ event.description }}</p>
                 <div class="d-flex justify-content-between align-items-center">
                   <small class="text-muted">
-                    <i class="fas fa-map-marker-alt me-1"></i>
+                    <i class="bi bi-geo-alt-fill me-1"></i>
                     {{ event.location }}
                   </small>
                 </div>
@@ -41,7 +41,9 @@ const upcomingEvents = ref([
 {
     title: 'Jarní brigáda',
     date: '20. června 2025',
-    description: 'Dvoudenní výprava na řece Orlici. Ubytování v kempech, večerní táborák a společenský program.',
+    description: `Loděnice volá: pavouci si chtějí založit vlastní oddíl! 🕷️
+                  Přijď na brigádu – uklidíme, opravíme, a možná i najdeme raft z roku 2003.
+                  Práce jak na kostele, ale odměna jak na festivalu: pivo, buřty, smích a puchýře zdarma! 🍺🔥`,
     location: 'Hronov - Loděnice',
     image: events2
   },

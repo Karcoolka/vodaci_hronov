@@ -3,17 +3,14 @@
     <div class="hero-section text-white py-5 mb-4">
       <div class="container">
         <div class="row align-items-center">
-          <div class="col-md-9">
-            <h1 class="display-4">Vodáci Hronov</h1>
+          <div class="col">
+            <img src="../assets/logo.png" alt="Vodáci Hronov" class="img-fluid w-400 mb-3" />
             <p class="lead">Spolek vodáků v Hronově - váš partner pro nejen vodácké zážitky</p>
             <div class="alert alert-info mb-3" role="alert">
               <i class="bi bi-clock-fill me-2"></i>
               <strong>Pravidelné schůzky probíhají každé úterý 17 - 19 hodin</strong>
             </div>
             <router-link to="/o-nas" class="btn btn-light btn-lg">Více o nás</router-link>
-          </div>
-          <div class="col-md-3">
-            <img src="../assets/logo.png" alt="Vodáci Hronov" class="img-fluid" />
           </div>
         </div>
       </div>
@@ -27,7 +24,7 @@
               <h5 class="card-title">Nadcházející akce</h5>
               <p class="card-text flex-grow-1">Připravované výpravy a akce pro členy i veřejnost.</p>
               <div class="mt-auto">
-                <router-link to="/akce" class="btn btn-primary w-100">Zobrazit akce</router-link>
+                <router-link to="/akce" class="btn btn-primary w-200">Zobrazit akce</router-link>
               </div>
             </div>
           </div>
@@ -38,7 +35,7 @@
               <h5 class="card-title">Kontakt</h5>
               <p class="card-text flex-grow-1">Spojte se s námi pro více informací nebo připojení ke spolku.</p>
               <div class="mt-auto">
-                <router-link to="/kontakt" class="btn btn-primary w-100">Kontaktovat</router-link>
+                <router-link to="/kontakt" class="btn btn-primary w-200">Kontaktovat</router-link>
               </div>
             </div>
           </div>
@@ -49,7 +46,7 @@
               <h5 class="card-title">Stalo se</h5>
               <p class="card-text flex-grow-1">Informace z našeho spolku o proběhlých akcích.</p>
               <div class="mt-auto">
-                <router-link to="/stalo-se" class="btn btn-primary w-100">Číst více</router-link>
+                <router-link to="/stalo-se" class="btn btn-primary w-200">Číst více</router-link>
               </div>
             </div>
           </div>
@@ -110,8 +107,18 @@
   transform: translateY(-5px);
 }
 
-.w-100 {
+.w-200 {
     max-width: 200px;
+}
+
+.w-400 {
+    max-width: 400px;
+}
+
+@media (max-width: 768px) {
+    .w-400 {
+        max-width: 300px;
+    }
 }
 
 .alert-info {

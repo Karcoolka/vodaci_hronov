@@ -20,7 +20,7 @@ onMounted(() => {
   <div class="app">
     <nav class="navbar navbar-expand-lg">
       <div class="container">
-        <img src="./assets/logo.png" alt="Vodáci Hronov" class="navbar-brand w-50" />
+        <img src="./assets/logo.png" alt="Vodáci Hronov" class="navbar-brand" style="max-width: 40px; margin-right: 10px;" />
         <router-link class="navbar-brand" to="/">Vodáci Hronov</router-link>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
           <span class="navbar-toggler-icon"></span>
@@ -81,8 +81,8 @@ onMounted(() => {
   flex-direction: column;
 }
 
-.w-50 {
-  max-width: 30px;
+.w-100 {
+  max-width: 100px;
 }
 
 main {
