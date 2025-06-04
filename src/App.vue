@@ -20,7 +20,7 @@ onMounted(() => {
   <div class="app">
     <nav class="navbar navbar-expand-lg">
       <div class="container">
-        <img src="./assets/logo.png" alt="Vodáci Hronov" class="navbar-brand" style="max-width: 40px; margin-right: 10px;" />
+        <img src="./assets/logo.png" alt="Vodáci Hronov" class="navbar-brand" style="max-width: 70px; margin-right: 10px;" />
         <router-link class="navbar-brand" to="/">Vodáci Hronov</router-link>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
           <span class="navbar-toggler-icon"></span>
@@ -91,6 +91,23 @@ main {
 
 .navbar {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background-color: rgba(143, 90, 16, 0.999) !important;
+}
+
+.navbar .nav-link {
+  color: #ffffff !important;
+}
+
+.navbar .navbar-brand {
+  color: #ffffff !important;
+}
+
+.navbar-toggler {
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
 }
 
 footer {
