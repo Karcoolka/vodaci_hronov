@@ -4,16 +4,27 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import { ref, onMounted } from 'vue'
+import { auth } from '@/firebase';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { useRouter } from 'vue-router';
 
-// Membership status
-const isMember = ref(false)
+const router = useRouter();
+const isLoggedIn = ref(false);
 
-// Check membership status on component mount
 onMounted(() => {
-  // Here you would typically check the user's membership status
-  // For now, we'll use a mock value
-  isMember.value = false // Set to true for members
-})
+  onAuthStateChanged(auth, (user) => {
+    isLoggedIn.value = !!user;
+  });
+});
+
+const logout = async () => {
+  try {
+    await signOut(auth);
+    router.push('/');
+  } catch (error) {
+    console.error("Error signing out: ", error);
+  }
+};
 </script>
 
 <template>
@@ -22,7 +33,7 @@ onMounted(() => {
       <div class="container">
         <img src="./assets/logo.png" alt="Vodáci Hronov" class="navbar-brand" style="max-width: 70px; margin-right: 10px;" />
         <router-link class="navbar-brand" to="/">Vodáci Hronov</router-link>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -34,10 +45,10 @@ onMounted(() => {
               <router-link class="nav-link" to="/o-nas">O nás</router-link>
             </li>
             <li class="nav-item">
-              <router-link class="nav-link" to="/stalo-se">Stalo se</router-link>
+              <router-link class="nav-link" to="/akce">Nadcházející akce</router-link>
             </li>
             <li class="nav-item">
-              <router-link class="nav-link" to="/akce">Nadcházející Akce</router-link>
+              <router-link class="nav-link" to="/stalo-se">Stalo se</router-link>
             </li>
             <li class="nav-item">
               <router-link class="nav-link" to="/rezervace">Rezervace</router-link>
@@ -45,18 +56,19 @@ onMounted(() => {
             <li class="nav-item">
               <router-link class="nav-link" to="/kontakt">Kontakt</router-link>
             </li>
-            <li class="nav-item">
+            <li v-if="!isLoggedIn" class="nav-item">
               <router-link class="nav-link sign-in-link" to="/sign-in">Přihlášení</router-link>
+            </li>
+            <li v-else class="nav-item">
+              <a href="#" @click.prevent="logout" class="nav-link sign-in-link">Odhlásit</a>
             </li>
           </ul>
         </div>
       </div>
     </nav>
-
     <main class="container py-4">
       <router-view></router-view>
     </main>
-
     <footer class="bg-dark text-light py-4 mt-auto">
       <div class="container">
         <div class="row">
@@ -81,33 +93,12 @@ onMounted(() => {
   flex-direction: column;
 }
 
-.w-100 {
-  max-width: 100px;
+.w-50 {
+  max-width: 30px;
 }
 
 main {
   flex: 1;
-}
-
-.navbar {
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  background-color: rgba(143, 90, 16, 0.999) !important;
-}
-
-.navbar .nav-link {
-  color: #ffffff !important;
-}
-
-.navbar .navbar-brand {
-  color: #ffffff !important;
-}
-
-.navbar-toggler {
-  border-color: rgba(255, 255, 255, 0.5) !important;
-}
-
-.navbar-toggler-icon {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
 }
 
 footer {
