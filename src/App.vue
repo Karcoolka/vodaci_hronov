@@ -37,7 +37,7 @@ onMounted(() => {
               <router-link class="nav-link" to="/stalo-se">Stalo se</router-link>
             </li>
             <li class="nav-item">
-              <router-link class="nav-link" to="/akce">Akce</router-link>
+              <router-link class="nav-link" to="/akce">Nadcházející Akce</router-link>
             </li>
             <li class="nav-item">
               <router-link class="nav-link" to="/rezervace">Rezervace</router-link>

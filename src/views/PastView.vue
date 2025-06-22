@@ -18,12 +18,12 @@
                 </div>
                 <p class="card-text">{{ news.content }}</p>
               </div>
-              <div class="news-image" v-if="news.image">
+              <div class="news-image">
                 <img 
-                  :src="news.image" 
+                  :src="news.image || defaultEvent" 
                   :alt="news.title" 
-                  class="img-fluid rounded" 
-                  @error="handleImageError"
+                  class="img-fluid rounded"
+                  :class="{ 'grayscale': !news.image }"
                 />
               </div>
             </div>
@@ -61,6 +61,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import 'bootstrap-icons/font/bootstrap-icons.css'
+import defaultEvent from '@/assets/photos/default_event.jpg'
 
 // Import images
 import news1 from '@/assets/photos/news_1.png'
@@ -73,6 +74,13 @@ import news6 from '@/assets/photos/news_6.png'
 const selectedYear = ref(null)
 
 const newsItems = ref([
+{
+    title: 'Test NO IMG',
+    date: '1. července 2025',
+    year: 2025,
+    location: 'Velké Poříčí',
+    content: 'TEST'
+  },
   {
     title: 'Dětský Den ve Velkém Dřevíči',
     date: '1. června 2025',
@@ -288,5 +296,9 @@ const handleImageError = (event) => {
 .location i {
   color: #dc3545;
   font-size: 1rem;
+}
+
+.grayscale {
+  filter: grayscale(100%);
 }
 </style> 

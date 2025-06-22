@@ -1,15 +1,14 @@
 <template>
   <div class="events">
     <div class="container">
-      <h1 class="mb-4">Akce</h1>
+      <h1 class="mb-4">Nadcházející akce</h1>
 
       <!-- Upcoming Events -->
       <section class="mb-5">
-        <h2 class="mb-4">Nadcházející akce</h2>
         <div class="row g-4">
           <div class="col-md-6 col-lg-4" v-for="(event, index) in upcomingEvents" :key="index">
             <div class="card h-100">
-              <img :src="event.image" class="card-img-top" :alt="event.title">
+              <img :src="event.image || defaultEvent" class="card-img-top" :alt="event.title">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                   <h5 class="card-title mb-0">{{ event.title }}</h5>
@@ -35,6 +34,7 @@
 import { ref } from 'vue'
 import events1 from '@/assets/photos/events_1.png'
 import events2 from '@/assets/photos/events_2.png'
+import defaultEvent from '@/assets/photos/default_event.jpg'
 
 
 const upcomingEvents = ref([
@@ -53,6 +53,12 @@ const upcomingEvents = ref([
     description: 'Čtyřdenní vodácký výcvikový kurz pro začátečníky i pokročilé na Roudnici',
     location: 'Roudnice Nad Labem',
     image: events1
+  },
+  {
+    title: 'Test NO IMG',
+    date: '7-10. srpna 2025',
+    description: 'Čtyřdenní vodácký výcvikový kurz pro začátečníky i pokročilé na Roudnici',
+    location: 'Roudnice Nad Labem'
   },
 ])
 

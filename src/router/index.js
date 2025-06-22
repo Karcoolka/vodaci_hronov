@@ -22,8 +22,8 @@ const router = createRouter({
     },
     {
       path: '/stalo-se',
-      name: 'news',
-      component: () => import('../views/NewsView.vue')
+      name: 'past',
+      component: () => import('../views/PastView.vue')
     },
     {
       path: '/akce',
