@@ -69,7 +69,7 @@ const logout = async () => {
     <main class="container py-4">
       <router-view></router-view>
     </main>
-    <footer class="bg-dark text-light py-4 mt-auto">
+    <footer class="bg-dark text-light py-4 mt-auto position-relative">
       <div class="container">
         <div class="row">
           <div class="col-md-6">
@@ -81,6 +81,10 @@ const logout = async () => {
             <p>Email: vodacihronov@gmail.com</p>
           </div>
         </div>
+        <!-- LinkedIn floating button -->
+        <a href="https://www.linkedin.com/in/adela-simkova/" target="_blank" rel="noopener" class="btn-linkedin-float" title="Made by Adéla Šimková">
+          <i class="bi bi-linkedin"></i>
+        </a>
       </div>
     </footer>
   </div>
@@ -130,5 +134,48 @@ footer {
   color: #6c757d !important;
   background-color: rgba(108, 117, 125, 0.1) !important;
   border-color: rgba(108, 117, 125, 0.2);
+}
+
+.btn-linkedin {
+  background-color: #0077b5;
+  color: #fff !important;
+  border: none;
+  padding: 0.5rem 1.25rem;
+  border-radius: 2rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.btn-linkedin:hover {
+  background-color: #005983;
+  color: #fff !important;
+  text-decoration: none;
+}
+
+.btn-linkedin-float {
+  position: absolute;
+  right: 24px;
+  bottom: 16px;
+  background-color: #0077b5;
+  color: #fff !important;
+  border: none;
+  padding: 0.35rem 0.7rem;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 10;
+  transition: background 0.2s, transform 0.2s;
+  opacity: 0.85;
+}
+.btn-linkedin-float:hover {
+  background-color: #005983;
+  color: #fff !important;
+  opacity: 1;
+  transform: scale(1.08);
 }
 </style>

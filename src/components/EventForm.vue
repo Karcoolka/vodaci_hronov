@@ -30,6 +30,11 @@
             </div>
             <div class="mb-3">
               <label for="image" class="form-label">Obrázek (URL)</label>
+              <div class="form-text mb-2">
+                Jak nahrát fotku k události:<br>
+                Na tomto webu nahraj foto: <a href="https://imgur.com/upload" target="_blank" rel="noopener">https://imgur.com/upload</a><br>
+                Zkopíruj odkaz a přidej koncovku <b>.jpg</b> :)
+              </div>
               <input type="url" id="image" class="form-control" v-model="form.image">
               <img v-if="form.image" :src="form.image" class="img-fluid mt-2" style="max-height: 150px;" @error="onImageError">
               <div v-if="imageError" class="text-danger mt-1">Neplatná URL adresa obrázku.</div>
@@ -123,6 +128,9 @@ const handleSubmit = () => {
   color: #fff;
 }
 .form-label {
+  color: #fff;
+}
+.form-text {
   color: #fff;
 }
 </style> 
