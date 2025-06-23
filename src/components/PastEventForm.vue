@@ -3,7 +3,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">{{ event ? 'Upravit akci' : 'Přidat novou akci' }}</h5>
+          <h5 class="modal-title">{{ pastEvent ? 'Upravit minulou akci' : 'Přidat minulou akci' }}</h5>
           <button type="button" class="btn-close" @click="$emit('close')"></button>
         </div>
         <div class="modal-body">
@@ -11,27 +11,31 @@
             <div class="mb-3">
               <label for="title" class="form-label">Název</label>
               <input type="text" id="title" class="form-control" v-model="form.title" required>
+              <div v-if="submitted && !form.title" class="text-danger mt-1">Název je povinný.</div>
             </div>
             <div class="mb-3">
               <label for="date" class="form-label">Datum</label>
               <input type="date" id="date" class="form-control" v-model="form.date" required>
-            </div>
-            <div class="mb-3">
-              <label for="time" class="form-label">Čas (volitelné)</label>
-              <input type="time" id="time" class="form-control" v-model="form.time">
+              <div v-if="submitted && !form.date" class="text-danger mt-1">Datum je povinné.</div>
             </div>
             <div class="mb-3">
               <label for="location" class="form-label">Místo</label>
               <input type="text" id="location" class="form-control" v-model="form.location" required>
+              <div v-if="submitted && !form.location" class="text-danger mt-1">Místo je povinné.</div>
             </div>
             <div class="mb-3">
-              <label for="description" class="form-label">Popis</label>
-              <textarea id="description" class="form-control" v-model="form.description" rows="4" required></textarea>
+              <label for="content" class="form-label">Popis</label>
+              <textarea id="content" class="form-control" v-model="form.content" rows="4" required></textarea>
             </div>
             <div class="mb-3">
-              <label for="image" class="form-label">Obrázek (URL)</label>
-              <input type="url" id="image" class="form-control" v-model="form.image">
-              <img v-if="form.image" :src="form.image" class="img-fluid mt-2" style="max-height: 150px;" @error="onImageError">
+              <label for="imgURL" class="form-label">Obrázek (URL)</label>
+              <div class="form-text mb-2">
+                Jak nahrát fotku k události:<br>
+                Na tomto webu nahraj foto: <a href="https://imgur.com/upload" target="_blank" rel="noopener">https://imgur.com/upload</a><br>
+                Zkopíruj odkaz a přidej koncovku <b>.jpg</b> :)
+              </div>
+              <input type="url" id="imgURL" class="form-control" v-model="form.imgURL">
+              <img v-if="form.imgURL" :src="form.imgURL" class="img-fluid mt-2" style="max-height: 150px;" @error="onImageError">
               <div v-if="imageError" class="text-danger mt-1">Neplatná URL adresa obrázku.</div>
             </div>
             <div class="modal-footer">
@@ -49,9 +53,11 @@
 
 <script setup>
 import { ref, watch } from 'vue';
+import { format } from 'date-fns';
+import { cs } from 'date-fns/locale';
 
 const props = defineProps({
-  event: {
+  pastEvent: {
     type: Object,
     default: null
   }
@@ -63,23 +69,23 @@ const form = ref({
   title: '',
   date: '',
   location: '',
-  description: '',
-  image: null,
-  time: null
+  content: '',
+  imgURL: null
 });
 
 const imageError = ref(false);
+const submitted = ref(false);
 
-watch(() => props.event, (newEvent) => {
+watch(() => props.pastEvent, (newPastEvent) => {
   imageError.value = false;
-  if (newEvent) {
-    form.value = { ...newEvent };
+  if (newPastEvent) {
+    form.value = { ...newPastEvent };
   } else {
-    form.value = { title: '', date: '', location: '', description: '', image: null, time: null };
+    form.value = { title: '', date: '', location: '', content: '', imgURL: null };
   }
 }, { immediate: true });
 
-watch(() => form.value.image, () => {
+watch(() => form.value.imgURL, () => {
   imageError.value = false;
 });
 
@@ -88,16 +94,29 @@ const onImageError = () => {
 };
 
 const handleSubmit = () => {
-  if (imageError.value) return;
+  submitted.value = true;
+  if (
+    imageError.value ||
+    !form.value.title ||
+    !form.value.date ||
+    !form.value.location
+  ) return;
+
+  // Generate Czech date string
+  let dateCz = '';
   let year = '';
   if (form.value.date) {
     try {
-      year = new Date(form.value.date).getFullYear();
+      const dateObj = new Date(form.value.date);
+      dateCz = format(dateObj, 'd. MMMM yyyy', { locale: cs });
+      year = dateObj.getFullYear();
     } catch (e) {
+      dateCz = form.value.date;
       year = '';
     }
   }
-  emit('save', { ...form.value, year });
+
+  emit('save', { ...form.value, date: form.value.date, dateCz, year });
 };
 </script>
 
@@ -119,10 +138,13 @@ const handleSubmit = () => {
   max-width: 500px;
   margin: 1.75rem auto;
 }
+.form-label {
+  color: #fff;
+}
 .modal-title {
   color: #fff;
 }
-.form-label {
+.form-text {
   color: #fff;
 }
 </style> 

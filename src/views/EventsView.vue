@@ -8,8 +8,8 @@
 
       <!-- All Events -->
       <section class="mb-5">
-        <div v-if="allEvents.length" class="row g-4">
-          <div class="col-md-6 col-lg-4" v-for="event in allEvents" :key="event.id">
+        <div v-if="sortedEvents.length" class="row g-4">
+          <div class="col-md-6 col-lg-4" v-for="event in sortedEvents" :key="event.id">
             <div class="card h-100">
               <img :src="event.image || defaultEvent" class="card-img-top" :alt="event.title">
               <div class="card-body">
@@ -110,6 +110,14 @@ const formatCzechDate = (dateString) => {
   const date = new Date(dateString.split(' ')[0]);
   return format(date, 'd. MMMM yyyy', { locale: cs });
 };
+
+const sortedEvents = computed(() => {
+  return [...allEvents.value].sort((a, b) => {
+    if (!a.date) return 1
+    if (!b.date) return -1
+    return new Date(b.date) - new Date(a.date)
+  })
+})
 
 const upcomingEvents = computed(() => {
   const today = new Date();

@@ -1,35 +1,42 @@
 <template>
-  <div class="news">
+  <div class="past-events">
     <div class="container">
       <h1 class="mb-4">Stalo se</h1>
-
       <div class="row">
         <div class="col-md-9">
-          <!-- News items -->
-          <div class="news-item card mb-4" v-for="(news, index) in filteredNews" :key="index">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div></div>
+            <button v-if="isActivated" @click="openAddModal" class="btn btn-primary">Přidat minulou akci</button>
+          </div>
+          <!-- Past Events items -->
+          <div class="past-event-item card mb-4" v-for="pastEvent in filteredPastEvents" :key="pastEvent.id">
             <div class="card-body d-flex">
-              <div class="news-content flex-grow-1 pe-3">
+              <div class="past-event-content flex-grow-1 pe-3">
                 <div class="mb-2">
-                  <small class="text-muted d-block mb-1">{{ news.date }}</small>
-                  <h5 class="card-title mb-1">{{ news.title }}</h5>
+                  <small class="text-muted d-block mb-1">{{ getCzechDate(pastEvent) }}</small>
+                  <h5 class="card-title mb-1">{{ pastEvent.title }}</h5>
                   <small class="text-muted location d-block mb-2">
-                    <i class="bi bi-geo-alt-fill me-1"></i>{{ news.location }}
+                    <i class="bi bi-geo-alt-fill me-1"></i>{{ pastEvent.location }}
                   </small>
                 </div>
-                <p class="card-text">{{ news.content }}</p>
+                <p class="card-text">{{ pastEvent.content }}</p>
               </div>
-              <div class="news-image">
+              <div class="past-event-image">
                 <img 
-                  :src="news.image || defaultEvent" 
-                  :alt="news.title" 
+                  :src="pastEvent.imgURL || defaultEvent" 
+                  :alt="pastEvent.title" 
                   class="img-fluid rounded"
-                  :class="{ 'grayscale': !news.image }"
+                  :class="{ 'grayscale': !pastEvent.imgURL }"
+                  @error="handleImageError"
                 />
+              </div>
+              <div v-if="isActivated" class="ms-3 d-flex flex-column justify-content-start align-items-end">
+                <button @click="openEditModal(pastEvent)" class="btn btn-sm btn-outline-secondary mb-2">Upravit</button>
+                <button @click="handleDeletePastEvent(pastEvent.id)" class="btn btn-sm btn-outline-danger">Smazat</button>
               </div>
             </div>
           </div>
         </div>
-
         <div class="col-md-3">
           <div class="card">
             <div class="card-body">
@@ -54,121 +61,129 @@
           </div>
         </div>
       </div>
+      <PastEventForm
+        v-if="showPastEventModal"
+        :pastEvent="currentPastEvent"
+        @close="closeModal"
+        @save="handleSavePastEvent"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import 'bootstrap-icons/font/bootstrap-icons.css'
+import { ref, onMounted, computed } from 'vue'
+import { db } from '@/firebase'
+import { collection, onSnapshot, query, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore'
+import { useAuth } from '@/composables/useAuth'
+import PastEventForm from '@/components/PastEventForm.vue'
 import defaultEvent from '@/assets/photos/default_event.jpg'
+import { format } from 'date-fns'
+import { cs } from 'date-fns/locale'
 
-// Import images
-import news1 from '@/assets/photos/news_1.png'
-import news2 from '@/assets/photos/news_2.png'
-import news3 from '@/assets/photos/news_3.png'
-import news4 from '@/assets/photos/news_4.png'
-import news5 from '@/assets/photos/news_5.png'
-import news6 from '@/assets/photos/news_6.png'
-
+const { isActivated } = useAuth()
+const allPastEvents = ref([])
+const showPastEventModal = ref(false)
+const currentPastEvent = ref(null)
 const selectedYear = ref(null)
 
-const newsItems = ref([
-{
-    title: 'Test NO IMG',
-    date: '1. července 2025',
-    year: 2025,
-    location: 'Velké Poříčí',
-    content: 'TEST'
-  },
-  {
-    title: 'Dětský Den ve Velkém Dřevíči',
-    date: '1. června 2025',
-    year: 2025,
-    location: 'Velké Dřevíče',
-    content: 'Členi a přátelé vodáckého spolku pomáhali s organizací, soutěžemi a disciplínami na dětském dni ve Velkém Dřevíči.',
-    image: news1
-  },
-  {
-    title: 'Jarní brigáda v klubovně',
-    date: '24. května 2025',
-    year: 2025,
-    location: 'Klubovna',
-    content: 'Během jarní brigády jsme:\n• Natřeli terasu\n• Nařezali a nasekali většinu dřeva\n• Vyčistili břeh u ohniště\n• Přidělali madla k okenicím\n\nA zašli si na společný oběd 😊',
-    image: news2
-  },
-  {
-    title: 'Splutí Divoké Orlice',
-    date: '15. března 2025',
-    year: 2025,
-    location: 'Divoká Orlice',
-    content: 'Připravujeme jarní výpravu na řeku Orlici. Výprava je vhodná pro začátečníky i pokročilé vodáky. Přihlášky přijímáme do konce února.',
-    image: news3
-  },
-  {
-    title: 'Pálení čarodejnic',
-    date: '30. dubna 2025',
-    year: 2025,
-    location: 'Klubovna',
-    content: 'Opékání buřtů a soutěže pro děti a rodiče na tradičním pálení čarodějnic.',
-    image: news4
-  },
-  {
-    title: 'Odemykání Doubravy',
-    date: '26. dubna 2025',
-    year: 2025,
-    location: 'Řeka Doubrava',
-    content: 'Každoroční odemykání Doubravy s následným společným posezením.',
-    image: news5
+onMounted(() => {
+  const pastEventsCollection = collection(db, 'pastEvents')
+  const q = query(pastEventsCollection)
+  onSnapshot(q, (snapshot) => {
+    allPastEvents.value = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+  })
+})
+
+const openAddModal = () => {
+  currentPastEvent.value = null
+  showPastEventModal.value = true
+}
+
+const openEditModal = (pastEvent) => {
+  currentPastEvent.value = pastEvent
+  showPastEventModal.value = true
+}
+
+const closeModal = () => {
+  showPastEventModal.value = false
+  currentPastEvent.value = null
+}
+
+const handleSavePastEvent = async (pastEventData) => {
+  const dataToSave = { ...pastEventData }
+  if (dataToSave.id) {
+    const pastEventDocRef = doc(db, 'pastEvents', dataToSave.id)
+    await updateDoc(pastEventDocRef, dataToSave)
+  } else {
+    await addDoc(collection(db, 'pastEvents'), dataToSave)
   }
-])
+  closeModal()
+}
+
+const handleDeletePastEvent = async (id) => {
+  if (confirm('Opravdu si přejete smazat tuto minulou akci?')) {
+    await deleteDoc(doc(db, 'pastEvents', id))
+  }
+}
 
 const availableYears = computed(() => {
-  const years = new Set(newsItems.value.map(item => item.year))
-  return Array.from(years).sort((a, b) => b - a) // Sort years in descending order
+  const years = new Set(allPastEvents.value.map(item => item.year))
+  return Array.from(years).sort((a, b) => b - a)
 })
 
-const filteredNews = computed(() => {
-  if (selectedYear.value === null) {
-    return newsItems.value
-  }
-  return newsItems.value.filter(item => item.year === selectedYear.value)
+const filteredPastEvents = computed(() => {
+  let events = selectedYear.value === null
+    ? allPastEvents.value
+    : allPastEvents.value.filter(item => item.year === selectedYear.value)
+  return [...events].sort((a, b) => {
+    if (!a.date) return 1
+    if (!b.date) return -1
+    return new Date(b.date) - new Date(a.date)
+  })
 })
-
-const showFullNews = (news) => {
-  // Implement news detail view
-  console.log('Show full news:', news)
-}
 
 const handleImageError = (event) => {
   console.error('Image failed to load:', event.target.src)
   event.target.style.display = 'none'
 }
+
+const getCzechDate = (pastEvent) => {
+  if (pastEvent.dateCz) return pastEvent.dateCz
+  if (pastEvent.date) {
+    try {
+      return format(new Date(pastEvent.date), 'd. MMMM yyyy', { locale: cs })
+    } catch (e) {
+      return pastEvent.date
+    }
+  }
+  return ''
+}
 </script>
 
 <style scoped>
-.news-item {
+.past-event-item {
   transition: transform 0.2s;
   border: none;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.news-item:hover {
+.past-event-item:hover {
   transform: translateY(-5px);
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-.news-content {
+.past-event-content {
   min-width: 0; /* Prevents flex item from overflowing */
 }
 
-.news-image {
+.past-event-image {
   flex-shrink: 0;
   width: 200px;
   margin-left: 1rem;
 }
 
-.news-image img {
+.past-event-image img {
   width: 200px;
   height: 150px;
   object-fit: cover;
@@ -180,18 +195,18 @@ const handleImageError = (event) => {
     flex-direction: column;
   }
   
-  .news-image {
+  .past-event-image {
     width: 100%;
     margin-left: 0;
     margin-top: 1rem;
   }
   
-  .news-image img {
+  .past-event-image img {
     width: 100%;
     height: 200px;
   }
   
-  .news-content {
+  .past-event-content {
     padding-right: 0 !important;
   }
 }
