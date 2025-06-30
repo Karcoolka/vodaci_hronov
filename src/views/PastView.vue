@@ -20,6 +20,11 @@
                   </small>
                 </div>
                 <p class="card-text">{{ pastEvent.content }}</p>
+                <div v-if="pastEvent.photogaleryUrl" class="mt-2">
+                  <a :href="pastEvent.photogaleryUrl" target="_blank" rel="noopener" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-images me-1"></i> Fotogalerie
+                  </a>
+                </div>
               </div>
               <div class="past-event-image">
                 <img 

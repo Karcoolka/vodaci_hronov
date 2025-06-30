@@ -22,15 +22,8 @@
                 <i class="bi bi-geo-alt-fill text-primary me-2"></i>
                 <div>
                   <h6>Korespondenční adresa</h6>
-                  <p class="mb-0">Jugoslávská 1539<br>547 01 Náchod</p>
-                </div>
-              </div>
-
-              <div class="contact-item mb-3">
-                <i class="bi bi-telephone-fill text-primary me-2"></i>
-                <div>
-                  <h6>Telefon</h6>
-                  <p class="mb-0">+420 606 675 348</p>
+                  <p class="mb-0">Libor Jungman (předseda)</p>
+                  <p class="mb-0">Žabokrky 28<br>549 31 Hronov</p>
                 </div>
               </div>
 

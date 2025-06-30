@@ -5,18 +5,36 @@
       
       <!-- PDF Download Section -->
       <div class="row mb-4">
-        <div class="col-12">
-          <div class="card">
+        <div class="col-12 col-md-6 mb-3 mb-md-0">
+          <div class="card h-100">
             <div class="card-body">
-              <h5 class="card-title">Rezervační formulář</h5>
+              <h5 class="card-title">Rezervační formulář pro zapůjčení plavidla</h5>
               <p class="card-text">
                 Stáhněte si rezervační formulář, vyplňte ho a zašlete na email.
               </p>
               <div class="d-flex gap-3">
-                <a :href="rezervacePdf" download class="btn btn-primary">
+                <a :href="rezervacePlavidloPdf" download class="btn btn-primary">
                   <i class="bi bi-download me-2"></i>Stáhnout formulář (PDF)
                 </a>
-                <a href="mailto:simkova54321@gmail.com" class="btn btn-outline-primary">
+                <a href="mailto:vodacihronov@gmail.com" class="btn btn-outline-primary">
+                  <i class="bi bi-envelope me-2"></i>Poslat email
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">Rezervační formulář pro zapujčení loděnice</h5>
+              <p class="card-text">
+                Stáhněte si rezervační formulář, vyplňte ho a zašlete na email.
+              </p>
+              <div class="d-flex gap-3">
+                <a :href="rezervaceLodenicePdf" download class="btn btn-primary">
+                  <i class="bi bi-download me-2"></i>Stáhnout formulář (PDF)
+                </a>
+                <a href="mailto:vodacihronov@gmail.com" class="btn btn-outline-primary">
                   <i class="bi bi-envelope me-2"></i>Poslat email
                 </a>
               </div>
@@ -40,7 +58,7 @@
                 <li class="mb-3">
                   <i class="bi bi-envelope me-2"></i>
                   <strong>Email:</strong> 
-                  <a href="mailto:simkova54321@gmail.com"> vodacihronov@gmail.com</a>
+                  <a href="mailto:vodacihronov@gmail.com"> vodacihronov@gmail.com</a>
                 </li>
                 <li class="mb-3">
                   <i class="bi bi-info-circle me-2"></i>
@@ -56,7 +74,8 @@
 </template>
 
 <script setup>
-import rezervacePdf from '@/assets/rezervace.pdf'
+import rezervacePlavidloPdf from '@/assets/zapujceni_plavidla.pdf'
+import rezervaceLodenicePdf from '@/assets/zapujceni_lodejnice.pdf'
 </script>
 
 <style scoped>

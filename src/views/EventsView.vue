@@ -3,11 +3,22 @@
     <div class="container">
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Nadcházející akce</h1>
-        <button v-if="isActivated" @click="openAddModal" class="btn btn-primary">Přidat akci</button>
       </div>
 
       <!-- All Events -->
       <section class="mb-5">
+        <div class="calendar-wrapper">
+          <iframe 
+            src="https://calendar.google.com/calendar/embed?src=vodacihronov%40gmail.com&ctz=Europe%2FPrague"
+            class="calendar-iframe"
+            frameborder="0"
+            scrolling="no"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <div v-if="isActivated" class="d-flex justify-content-end mb-4">
+          <button @click="openAddModal" class="btn btn-primary">Přidat akci</button>
+        </div>
         <div v-if="sortedEvents.length" class="row g-4">
           <div class="col-md-6 col-lg-4" v-for="event in sortedEvents" :key="event.id">
             <div class="card h-100">
@@ -138,5 +149,36 @@ const upcomingEvents = computed(() => {
 }
 .badge {
   font-size: 0.9em;
+}
+.calendar-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 0 2.5rem 0;
+}
+.calendar-iframe {
+  border: 0;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  border-radius: 18px;
+  width: 100%;
+  max-width: 800px;
+  min-height: 400px;
+  height: 60vw;
+  max-height: 600px;
+  background: #fff;
+}
+@media (max-width: 900px) {
+  .calendar-iframe {
+    max-width: 100%;
+    height: 70vw;
+    min-height: 350px;
+  }
+}
+@media (max-width: 600px) {
+  .calendar-iframe {
+    max-width: 100%;
+    height: 80vw;
+    min-height: 250px;
+  }
 }
 </style> 

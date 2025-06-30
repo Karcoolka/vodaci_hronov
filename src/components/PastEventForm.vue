@@ -38,6 +38,10 @@
               <img v-if="form.imgURL" :src="form.imgURL" class="img-fluid mt-2" style="max-height: 150px;" @error="onImageError">
               <div v-if="imageError" class="text-danger mt-1">Neplatná URL adresa obrázku.</div>
             </div>
+            <div class="mb-3">
+              <label for="photogaleryUrl" class="form-label">Fotogalerie (odkaz, volitelné)</label>
+              <input type="text" id="photogaleryUrl" class="form-control" v-model="form.photogaleryUrl" placeholder="http://...">
+            </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" @click="$emit('close')">Zrušit</button>
               <button type="submit" class="btn btn-primary ms-2">
@@ -70,7 +74,8 @@ const form = ref({
   date: '',
   location: '',
   content: '',
-  imgURL: null
+  imgURL: null,
+  photogaleryUrl: ''
 });
 
 const imageError = ref(false);
@@ -79,9 +84,10 @@ const submitted = ref(false);
 watch(() => props.pastEvent, (newPastEvent) => {
   imageError.value = false;
   if (newPastEvent) {
-    form.value = { ...newPastEvent };
+    form.value = { photogaleryUrl: '', ...newPastEvent };
+    if (newPastEvent.photogaleryUrl) form.value.photogaleryUrl = newPastEvent.photogaleryUrl;
   } else {
-    form.value = { title: '', date: '', location: '', content: '', imgURL: null };
+    form.value = { title: '', date: '', location: '', content: '', imgURL: null, photogaleryUrl: 'http://' };
   }
 }, { immediate: true });
 
