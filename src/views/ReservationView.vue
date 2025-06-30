@@ -26,7 +26,7 @@
         <div class="col-12 col-md-6">
           <div class="card h-100">
             <div class="card-body">
-              <h5 class="card-title">Rezervační formulář pro zapujčení loděnice</h5>
+              <h5 class="card-title">Rezervační formulář pro zapůjčení loděnice</h5>
               <p class="card-text">
                 Stáhněte si rezervační formulář, vyplňte ho a zašlete na email.
               </p>
